@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
-# cript that sets up your web servers for the deployment of web_static
-dpkg -s nginx &> /dev/null
-result="echo $?"
-if [ "$result" == 0 ]
+# Install Nginx if it not already installed
+if ! command -v nginx &> /dev/null;
 then
     sudo apt-get -y update
     sudo apt-get install -y nginx
     sudo service nginx start
 fi
-sudo mkdir -p /data/
-sudo mkdir -p /data/web_static/
-sudo mkdir -p /data/web_static/releases/
+# Create those folders if doesnt alreeady exist
 sudo mkdir -p /data/web_static/shared/
 sudo mkdir -p /data/web_static/releases/test/
+#Create a fake HTML with simple content to test your Ngninx configuration
 echo "
 <html>
   <head>
@@ -20,12 +17,14 @@ echo "
   <body>
     Holberton School
   </body>
-</html>" > /data/web_static/releases/test/index.html
-
+</html>
+" > /data/web_static/releases/test/index.html
+# Create a symbolik link that delete and recreated every time is ran
 source_file="/data/web_static/current"
 destiny_file="/data/web_static/releases/test/"
 sudo ln -sf "$destiny_file" "$source_file"
+# Give ownership of the /data/ to the ubuntu user and group recursive
 sudo chown -R ubuntu:ubuntu /data/
-
-sudo sed -i "38i \\\\tlocation /hbnb_static/ {\n\t\talias $source_file/;\n\tautoindex off;\n\t}\n" /etc/nginx/sites-enabled/default
+# Update the Ninx configuration to work https://mydomainame.tech/hbnb_static
+sudo sed -i "38i \ \tlocation /hbnb_static/ {\n\t\talias $source_file/;\n\t\tautoindex off;\n\t}\n" /etc/nginx/sites-enabled/default
 sudo service nginx restart
