@@ -61,8 +61,9 @@ def do_deploy(archive_path):
 def deploy():
     """ Summary """
     archive = do_pack()
-    if not exists(archive):
+    if archive is None:
         return False
     else:
         value = archive.__dict__["command"].split(" ")[-2]
+        print(value)
         return do_deploy(value)
