@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" Write a Fabric script (based on the file 2-do_deploy_web_static.py) that creates and distributes an archive to your web servers, using the function deploy"""
+""" Write a Fabric script (based on the file
+ 2-do_deploy_web_static.py) that creates and distributes
+  an archive to your web servers, using the function
+   deploy"""
 from fabric.api import local, env, run, put
 from datetime import datetime
 from os.path import exists
@@ -54,11 +57,12 @@ def do_deploy(archive_path):
     else:
         return False
 
+
 def deploy():
     """ Summary """
     archive = do_pack()
     if not exists(archive):
         return False
     else:
-        value = do_deploy(archive)
-        return value
+        value = archive.__dict__["command"].split(" ")[-2]
+        return do_deploy(value)
