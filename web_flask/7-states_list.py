@@ -11,6 +11,11 @@ app = Flask(__name__)
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     """/states_list folder
+    storage.all() -> dictionary with objects of everything
+
+    storage.all(State) -> dictionary with all instances of State
+
+    storage.all(State).values() -> info of every State
 
     Returns:
         [HTML content: [display a HTML page: (inside the tag BODY)]
@@ -21,7 +26,7 @@ def states_list():
 
 @app.teardown_appcontext
 def remove_session(exception):
-    """fter each request you must remove the current SQLAlchemy Session"""
+    """after each request you must remove the current SQLAlchemy Session"""
     storage.close()
 
 
